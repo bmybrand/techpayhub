@@ -1,3 +1,16 @@
+// Header: light over the dark opener, then solid once the page is scrolled.
+const nav = document.querySelector('.nav');
+let headerFrame;
+const setHeader = () => {
+  if (!nav) return;
+  nav.classList.toggle('scrolled', scrollY > 16);
+};
+setHeader();
+addEventListener('scroll', () => {
+  if (headerFrame) return;
+  headerFrame = requestAnimationFrame(() => { headerFrame = 0; setHeader(); });
+}, { passive: true });
+
 // Menu
 const burger = document.querySelector('.burger');
 const menu = document.getElementById('menu');
@@ -6,6 +19,8 @@ if (burger && menu) {
     burger.setAttribute('aria-expanded', open);
     burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     menu.classList.toggle('open', open);
+    nav?.classList.toggle('menu-open', open);
+    setHeader();
     document.body.style.overflow = open ? 'hidden' : '';
   };
   burger.addEventListener('click', () => set(burger.getAttribute('aria-expanded') !== 'true'));
